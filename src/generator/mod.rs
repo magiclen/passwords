@@ -67,9 +67,6 @@ impl PasswordGenerator {
             return Err("You need to enable at least one kind of characters.");
         }
 
-        if self.strict && self.length < sections_count {
-            return Err("The length of passwords is too short.");
-        }
         if self.strict {
             if self.length < sections_count {
                 return Err("The length of passwords is too short.");
