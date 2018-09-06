@@ -28,6 +28,26 @@ println!("{}", pg.generate_one().unwrap());
 println!("{:?}", pg.generate(5).unwrap());
 ```
 
+## Hashing
+
+To enable hashing functions, you need to enable the **crypto** feature.
+
+```toml
+[dependencies.passwords]
+version = "*"
+features = ["crypto"]
+```
+
+Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions are available.
+
+```rust
+extern crate passwords;
+
+let salt = passwords::gen_salt();
+let hashed = passwords::bcrypt(10, &salt, "password").unwrap();
+assert!(passwords::identify_bcrypt(10, &salt, "password", &hashed).unwrap());
+```
+
 ## TODO
 
 * Analyzer
