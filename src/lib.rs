@@ -1,7 +1,7 @@
 //! # Passwords
 //! This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them.
 //!
-//! ## Generating Passwords
+//! ## Generator
 //!
 //! `PasswordGenerator` can be used for generating passwords which consist optional numbers, lowercase letters, uppercase letters and symbols.
 //!
@@ -23,7 +23,7 @@
 //! println!("{:?}", pg.generate(5).unwrap());
 //! ```
 //!
-//! ## Hashing
+//! ## Hasher
 //!
 //! To enable hashing functions, you need to enable the **crypto** feature.
 //!
@@ -33,7 +33,7 @@
 //! features = ["crypto"]
 //! ```
 //!
-//! Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions are available.
+//! Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions in the `hasher` module are available.
 //!
 //! ```rust,ignore
 //! extern crate passwords;
@@ -91,13 +91,9 @@ extern crate lazy_static;
 mod generator;
 /// Analyze passwords.
 pub mod analyzer;
-mod hash;
+#[cfg(feature = "crypto")]
+/// Hash passwords.
+pub mod hasher;
 
 pub use generator::PasswordGenerator;
 pub use analyzer::AnalyzedPassword;
-#[cfg(feature = "crypto")]
-pub use hash::bcrypt;
-#[cfg(feature = "crypto")]
-pub use hash::identify_bcrypt;
-#[cfg(feature = "crypto")]
-pub use hash::gen_salt;

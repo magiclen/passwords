@@ -6,7 +6,7 @@ Passwords
 
 This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them.
 
-## Generating Passwords
+## Generator
 
 `PasswordGenerator` can be used for generating passwords which consist optional numbers, lowercase letters, uppercase letters and symbols.
 
@@ -28,7 +28,7 @@ println!("{}", pg.generate_one().unwrap());
 println!("{:?}", pg.generate(5).unwrap());
 ```
 
-## Hashing
+## Hasher
 
 To enable hashing functions, you need to enable the **crypto** feature.
 
@@ -38,14 +38,15 @@ version = "*"
 features = ["crypto"]
 ```
 
-Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions are available.
+Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions in the `hasher` module are available.
 
 ```rust
 extern crate passwords;
+use passwords::hasher;
 
-let salt = passwords::gen_salt();
-let hashed = passwords::bcrypt(10, &salt, "password").unwrap();
-assert!(passwords::identify_bcrypt(10, &salt, "password", &hashed).unwrap());
+let salt = hasher::gen_salt();
+let hashed = hasher::bcrypt(10, &salt, "password").unwrap();
+assert!(hasher::identify_bcrypt(10, &salt, "password", &hashed).unwrap());
 ```
 
 ## Analyzer
