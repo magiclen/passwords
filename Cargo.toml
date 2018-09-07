@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Magic Len <len@magiclen.org>"]
 repository = "https://github.com/magiclen/passwords"
 homepage = "https://magiclen.org/passwords"
@@ -15,10 +15,8 @@ travis-ci = { repository = "magiclen/passwords", branch = "master" }
 appveyor = { repository = "magiclen/passwords", branch = "master", service = "github" }
 
 [dependencies]
-regex = "1.0"
 rand = "0.5.5"
 random-pick = "1.2"
-lazy_static =  "1.1"
 rust-crypto = { version = "0.2.36", optional = true }
 
 [dev-dependencies]

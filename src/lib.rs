@@ -117,9 +117,6 @@
 //! * 95 ~ 99 is very strong
 //! * 99 ~ 100 is invulnerable
 
-#[macro_use]
-extern crate lazy_static;
-
 mod generator;
 /// Analyze passwords.
 pub mod analyzer;

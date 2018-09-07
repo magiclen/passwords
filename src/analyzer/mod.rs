@@ -1,14 +1,4 @@
-extern crate regex;
-
-use self::regex::Regex;
-
 use ::std::collections::HashMap;
-
-lazy_static! {
-    static ref FILTER: Regex = {
-        Regex::new(r"[\x00-\x1F\x7F]").unwrap()
-    };
-}
 
 #[cfg(feature = "common-password")]
 #[derive(Debug, Clone, PartialEq)]
@@ -156,11 +146,7 @@ pub fn is_common_password(password: &str) -> bool {
 
 /// Analyze a password.
 pub fn analyze(password: &str) -> AnalyzedPassword {
-    let password = FILTER.replace_all(password, "");
-
     let password_chars = password.chars();
-
-    let length = password.chars().count();
 
     let mut spaces_count = 0usize;
     let mut numbers_count = 0usize;
@@ -180,8 +166,20 @@ pub fn analyze(password: &str) -> AnalyzedPassword {
 
     let mut count_map: HashMap<char, usize> = HashMap::new();
 
+    let mut password = String::with_capacity(password.len());
+
+    let mut length = 0;
+
     for c in password_chars {
         let char_code = c as u32;
+
+        if char_code <= 0x1F || char_code == 0x7F {
+            continue;
+        }
+
+        password.push(c);
+
+        length += 1;
 
         let count = count_map.entry(c).or_insert(0);
         *count += 1;
