@@ -106,7 +106,7 @@
 //! }
 //! ```
 //!
-//! A score which is,
+//! A password whose score is,
 //!
 //! * 0 ~ 20 is very dangerous (may be cracked within few seconds)
 //! * 20 ~ 40 is dangerous
