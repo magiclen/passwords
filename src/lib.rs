@@ -74,7 +74,7 @@
 //! ```
 //!
 //! You can also check whether a password is too simple and dangerous to use, by looking up a *common passwords table*.
-//! If you want to do that you need to enable the **common-password** feature.
+//! If you want to do that, you need to enable the **common-password** feature.
 //!
 //! ```toml
 //! [dependencies.passwords]
