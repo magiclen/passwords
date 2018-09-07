@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "0.3.1"
+version = "1.0.0"
 authors = ["Magic Len <len@magiclen.org>"]
 repository = "https://github.com/magiclen/passwords"
 homepage = "https://magiclen.org/passwords"
@@ -27,3 +27,6 @@ regex = "1"
 [features]
 crypto = ["rust-crypto"]
 common-password = []
+
+[package.metadata.docs.rs]
+all-features = true

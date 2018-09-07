@@ -45,7 +45,7 @@
 //!
 //! ## Analyzer
 //!
-//! The `analyze` function is `analyzer` module can be used to create a `AnalyzedPassword` instance which contains some information about the input password.
+//! The `analyze` function in the `analyzer` module can be used to create a `AnalyzedPassword` instance which contains some information about the input password.
 //!
 //! Typically, we don't want our readable password to contain control characters like BS, LF, CR, etc.
 //! Before the analyzer analyzes a password, it filters the password in order to remove its control characters. And after analyzing, the analyzer will return the filtered password.
@@ -84,6 +84,38 @@
 //! Then, the `is_common_password` function in `analyzer` module and the `is_common` method of a `AnalyzedPassword` instance are available.
 //!
 //! You should notice that after you enable the **common-password** feature, the time for compiling increases dramatically, because the *common passwords table* will be compiled into the executable binary file.
+//!
+//!
+//! ## Scorer
+//!
+//! After analyzing a password, you can use the `score` function in the `scorer` module to score it.
+//!
+//! ```
+//! extern crate passwords;
+//!
+//! use passwords::analyzer;
+//! use passwords::scorer;
+//!
+//! assert_eq!(62f64, scorer::score(&analyzer::analyze("kq4zpz13")));
+//! assert_eq!(100f64, scorer::score(&analyzer::analyze("ZYX[$BCkQB中文}%A_3456]  H(\rg")));
+//!
+//! if cfg!(feature = "common-password") {
+//!     assert_eq!(11.2f64, scorer::score(&analyzer::analyze("feelings"))); // "feelings" is common, so the score is punitively the original divided by 5
+//! } else {
+//!     assert_eq!(56f64, scorer::score(&analyzer::analyze("feelings")));
+//! }
+//! ```
+//!
+//! A score which is,
+//!
+//! * 0 ~ 20 is very dangerous (may be cracked within few seconds)
+//! * 20 ~ 40 is dangerous
+//! * 40 ~ 60 is very weak
+//! * 60 ~ 80 is weak
+//! * 80 ~ 90 is good
+//! * 90 ~ 95 is strong
+//! * 95 ~ 99 is very strong
+//! * 99 ~ 100 is invulnerable
 
 #[macro_use]
 extern crate lazy_static;
@@ -94,6 +126,8 @@ pub mod analyzer;
 #[cfg(feature = "crypto")]
 /// Hash passwords.
 pub mod hasher;
+/// Score passwords.
+pub mod scorer;
 
 pub use generator::PasswordGenerator;
 pub use analyzer::AnalyzedPassword;
