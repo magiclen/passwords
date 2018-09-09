@@ -89,7 +89,7 @@ features = ["common-password"]
 ```
 Then, the `is_common_password` function in `analyzer` module and the `is_common` method of a `AnalyzedPassword` instance are available.
 
-You should notice that after you enable the **common-password** feature, the time for compiling increases dramatically, because the *common passwords table* will be compiled into the executable binary file.
+You should notice that after you enable the **common-password** feature, the time for compiling increases dramatically, because the *common passwords table* will be compiled into the executable binary file as a hardcode array.
 
 ## Scorer
 

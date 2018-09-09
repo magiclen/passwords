@@ -134,10 +134,24 @@ macro_rules! gen_analyzed_password {
     };
 }
 
-
+#[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
 static COMMON_PASSWORDS: [&'static str; 422054] = include!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
 
+#[cfg(debug_assertions)]
+#[cfg(feature = "common-password")]
+static COMMON_PASSWORDS: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
+
+#[cfg(debug_assertions)]
+#[cfg(feature = "common-password")]
+/// Whether the input password is common or not. A common password means it is dangerous.
+pub fn is_common_password(password: &str) -> bool {
+    let target = format!("\"{}\"", password);
+
+    COMMON_PASSWORDS.contains(&target.as_str())
+}
+
+#[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
 /// Whether the input password is common or not. A common password means it is dangerous.
 pub fn is_common_password(password: &str) -> bool {
