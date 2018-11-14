@@ -159,7 +159,7 @@ pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
 #[cfg(feature = "common-password")]
 /// Whether the input password is common or not. A common password means it is dangerous.
 pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
-    COMMON_PASSWORDS.binary_search(password.as_ref()).is_ok()
+    COMMON_PASSWORDS.binary_search(&password.as_ref()).is_ok()
 }
 
 /// Analyze a password.
