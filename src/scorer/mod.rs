@@ -92,39 +92,3 @@ pub fn score(analyzed_password: &AnalyzedPassword) -> f64 {
 
     score
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn simple_password() {
-        let password = "kq4zpz13";
-
-        let analyzed = ::analyzer::analyze(password);
-
-        assert_eq!(62f64, score(&analyzed));
-    }
-
-    #[test]
-    fn strong_password() {
-        let password = "ZYX[$BCkQB中文}%A_3456]  H(\rg";
-
-        let analyzed = ::analyzer::analyze(password);
-
-        assert_eq!(100f64, score(&analyzed));
-    }
-
-    #[test]
-    fn common_password() {
-        let password = "abc123";
-
-        let analyzed = ::analyzer::analyze(password);
-
-        if cfg!(feature = "common-password") {
-            assert_eq!(4.8f64, score(&analyzed)); // "abc123" is common, so the score is punitively the original divided by 5
-        } else {
-            assert_eq!(24f64, score(&analyzed));
-        }
-    }
-}
