@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["Magic Len <len@magiclen.org>"]
 repository = "https://github.com/magiclen/passwords"
 homepage = "https://magiclen.org/passwords"

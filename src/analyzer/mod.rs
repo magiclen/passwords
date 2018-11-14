@@ -145,8 +145,8 @@ static COMMON_PASSWORDS: &'static str = include_str!(concat!(env!("CARGO_MANIFES
 #[cfg(debug_assertions)]
 #[cfg(feature = "common-password")]
 /// Whether the input password is common or not. A common password means it is dangerous.
-pub fn is_common_password(password: &str) -> bool {
-    let target = format!("\"{}\"", password);
+pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
+    let target = format!("\"{}\"", password.as_ref());
 
     COMMON_PASSWORDS.contains(&target.as_str())
 }
@@ -154,12 +154,13 @@ pub fn is_common_password(password: &str) -> bool {
 #[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
 /// Whether the input password is common or not. A common password means it is dangerous.
-pub fn is_common_password(password: &str) -> bool {
-    COMMON_PASSWORDS.binary_search(&password).is_ok()
+pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
+    COMMON_PASSWORDS.binary_search(password.as_ref()).is_ok()
 }
 
 /// Analyze a password.
-pub fn analyze(password: &str) -> AnalyzedPassword {
+pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
+    let password = password.as_ref();
     let password_chars = password.chars();
 
     let mut spaces_count = 0usize;
