@@ -80,6 +80,10 @@ impl AnalyzedPassword {
         self.progressive_count
     }
 
+    pub fn into_password(self) -> String {
+        self.password
+    }
+
     #[cfg(feature = "common-password")]
     pub fn is_common(&self) -> bool {
         self.is_common
