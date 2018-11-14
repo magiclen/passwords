@@ -266,13 +266,13 @@ mod tests {
 
     #[cfg(feature = "common-password")]
     #[test]
-    fn test_is_common_password_1() {
+    fn is_common_password_1() {
         assert!(is_common_password("12345678"));
     }
 
     #[cfg(feature = "common-password")]
     #[test]
-    fn test_is_common_password_2() {
+    fn is_common_password_2() {
         assert!(!is_common_password("5jhx>_\"g-T"));
     }
 

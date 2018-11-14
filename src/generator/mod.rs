@@ -152,7 +152,7 @@ mod tests {
     const PASSWORD_COUNT: usize = 5000;
 
     #[test]
-    fn test_generate_password_lv1() {
+    fn generate_password_lv1() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -172,7 +172,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv2() {
+    fn generate_password_lv2() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -192,7 +192,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv3() {
+    fn generate_password_lv3() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -212,7 +212,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv4() {
+    fn generate_password_lv4() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -232,7 +232,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv5() {
+    fn generate_password_lv5() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -256,7 +256,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv6() {
+    fn generate_password_lv6() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,
@@ -282,7 +282,7 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_password_lv7() {
+    fn generate_password_lv7() {
         let pg = PasswordGenerator {
             length: 8,
             numbers: true,

@@ -98,7 +98,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_simple_password() {
+    fn simple_password() {
         let password = "kq4zpz13";
 
         let analyzed = ::analyzer::analyze(password);
@@ -107,7 +107,7 @@ mod tests {
     }
 
     #[test]
-    fn test_strong_password() {
+    fn strong_password() {
         let password = "ZYX[$BCkQB中文}%A_3456]  H(\rg";
 
         let analyzed = ::analyzer::analyze(password);
@@ -116,7 +116,7 @@ mod tests {
     }
 
     #[test]
-    fn test_common_password() {
+    fn common_password() {
         let password = "abc123";
 
         let analyzed = ::analyzer::analyze(password);

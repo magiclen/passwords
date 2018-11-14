@@ -71,7 +71,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_bcrypt_identify_true() {
+    fn bcrypt_identify_true() {
         let salt = gen_salt();
 
         let hashed = bcrypt(10, &salt, "password").unwrap();
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "assertion failed")]
-    fn test_bcrypt_identify_false() {
+    fn bcrypt_identify_false() {
         let salt = gen_salt();
 
         let hashed = bcrypt(10, &salt, "password").unwrap();
