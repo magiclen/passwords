@@ -3,7 +3,7 @@
 extern crate crypto;
 extern crate rand;
 
-use self::rand::Rng;
+use self::rand::RngCore;
 
 use self::crypto::md5::Md5;
 use self::crypto::digest::Digest;
@@ -12,9 +12,7 @@ use self::crypto::digest::Digest;
 pub fn gen_salt() -> [u8; 16] {
     let mut result = [0u8; 16];
 
-    for i in 0..16 {
-        result[i] = rand::thread_rng().gen();
-    }
+    rand::thread_rng().fill_bytes(&mut result);
 
     result
 }

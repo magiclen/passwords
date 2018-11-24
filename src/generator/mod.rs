@@ -1,9 +1,9 @@
 extern crate random_pick;
 
-static NUMBERS: [&'static str; 9] = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-static LOWERCASE_LETTERS: [&'static str; 23] = ["a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "m", "n", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-static UPPERCASE_LETTERS: [&'static str; 23] = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-static SYMBOLS: [&'static str; 28] = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "_", "-", "=", "}", "{", "[", "]", ":", ";", "\"", "/", "?", ".", ">", "<", ",", "~"];
+static NUMBERS: [char; 9] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+static LOWERCASE_LETTERS: [char; 23] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+static UPPERCASE_LETTERS: [char; 23] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+static SYMBOLS: [char; 28] = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '_', '-', '=', '}', '{', '[', ']', ':', ';', '"', '/', '?', '.', '>', '<', ',', '~'];
 
 /// This struct can help you generate passwords.
 #[derive(Debug, Clone, PartialEq)]
@@ -33,7 +33,7 @@ impl PasswordGenerator {
             return Err("A password's length cannot be 0.");
         }
 
-        let mut pool: Vec<&[&'static str]> = Vec::new();
+        let mut pool: Vec<&[char]> = Vec::new();
 
         let mut sections_count = 0;
 
@@ -86,17 +86,17 @@ impl PasswordGenerator {
                     let mut mask: u8 = 0;
                     let mut m = false;
 
-                    for &s in &random[start..start + self.length] {
-                        password.push_str(s);
+                    for &c in random[start..start + self.length].iter() {
+                        password.push(*c);
 
                         if !m {
-                            if NUMBERS.contains(s) {
+                            if NUMBERS.contains(c) {
                                 mask |= 0b00000001;
-                            } else if LOWERCASE_LETTERS.contains(s) {
+                            } else if LOWERCASE_LETTERS.contains(c) {
                                 mask |= 0b00000010;
-                            } else if UPPERCASE_LETTERS.contains(s) {
+                            } else if UPPERCASE_LETTERS.contains(c) {
                                 mask |= 0b00000100;
-                            } else if SYMBOLS.contains(s) {
+                            } else if SYMBOLS.contains(c) {
                                 mask |= 0b00001000;
                             } else {
                                 continue;
@@ -125,8 +125,8 @@ impl PasswordGenerator {
                 let start = i * self.length;
 
                 let mut password = String::with_capacity(self.length);
-                for &s in &random[start..start + self.length] {
-                    password.push_str(s);
+                for &&c in random[start..start + self.length].iter() {
+                    password.push(c);
                 }
 
                 result.push(password);
