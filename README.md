@@ -2,7 +2,6 @@ Passwords
 ====================
 
 [![Build Status](https://travis-ci.org/magiclen/passwords.svg?branch=master)](https://travis-ci.org/magiclen/passwords)
-[![Build status](https://ci.appveyor.com/api/projects/status/do7d8pu833tdk4tm/branch/master?svg=true)](https://ci.appveyor.com/project/magiclen/passwords/branch/master)
 
 This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them.
 
