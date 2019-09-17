@@ -119,14 +119,14 @@ A password whose score is,
 * 99 ~ 100 is invulnerable
 */
 
-mod generator;
 /// Analyze passwords.
 pub mod analyzer;
+mod generator;
 #[cfg(feature = "crypto")]
 /// Hash passwords.
 pub mod hasher;
 /// Score passwords.
 pub mod scorer;
 
-pub use generator::PasswordGenerator;
 pub use analyzer::AnalyzedPassword;
+pub use generator::PasswordGenerator;

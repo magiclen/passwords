@@ -78,7 +78,8 @@ fn generate_password_lv4() {
         strict: false,
     };
 
-    let re = Regex::new("^[1-9a-hj-km-np-zA-HJ-KM-NP-Z!@#$%^&*()+_\\-=}{\\[\\]:;\"/?.><,~]{8}$").unwrap();
+    let re = Regex::new("^[1-9a-hj-km-np-zA-HJ-KM-NP-Z!@#$%^&*()+_\\-=}{\\[\\]:;\"/?.><,~]{8}$")
+        .unwrap();
 
     let results = pg.generate(PASSWORD_COUNT).unwrap();
 
@@ -148,7 +149,8 @@ fn generate_password_lv7() {
         strict: true,
     };
 
-    let re = Regex::new("^[1-9a-hj-km-np-zA-HJ-KM-NP-Z!@#$%^&*()+_\\-=}{\\[\\]:;\"/?.><,~]{8}$").unwrap();
+    let re = Regex::new("^[1-9a-hj-km-np-zA-HJ-KM-NP-Z!@#$%^&*()+_\\-=}{\\[\\]:;\"/?.><,~]{8}$")
+        .unwrap();
     let re_n = Regex::new(r"[1-9]+").unwrap();
     let re_l = Regex::new(r"[a-hj-km-np-z]+").unwrap();
     let re_u = Regex::new(r"[A-HJ-KM-NP-Z]+").unwrap();

@@ -5,8 +5,8 @@ extern crate rand;
 
 use self::rand::RngCore;
 
-use self::crypto::md5::Md5;
 use self::crypto::digest::Digest;
+use self::crypto::md5::Md5;
 
 /// Generate a random 16-byte salt.
 pub fn gen_salt() -> [u8; 16] {
@@ -18,7 +18,11 @@ pub fn gen_salt() -> [u8; 16] {
 }
 
 /// Use bcrypt to hash a password whose length is not bigger than 72 bytes to 24 bytes data. If the salt is not 16 bytes, it will be MD5 hashed first.
-pub fn bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(cost: u8, salt: &K, password: &T) -> Result<[u8; 24], &'static str> {
+pub fn bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
+    cost: u8,
+    salt: &K,
+    password: &T,
+) -> Result<[u8; 24], &'static str> {
     let mut result = [0u8; 24];
 
     if cost >= 32 {
@@ -53,12 +57,16 @@ pub fn bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(cost: u8, salt: 
         crypto::bcrypt::bcrypt(cost as u32, salt, password, &mut result);
     }
 
-
     Ok(result)
 }
 
 /// Identify a plain text password by using the bcrypt-hashed data we've stored before.
-pub fn identify_bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(cost: u8, salt: &K, password: &T, hashed: &[u8; 24]) -> Result<bool, &'static str> {
+pub fn identify_bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
+    cost: u8,
+    salt: &K,
+    password: &T,
+    hashed: &[u8; 24],
+) -> Result<bool, &'static str> {
     let p = bcrypt(cost, salt, password)?;
 
     Ok(hashed.eq(&p))

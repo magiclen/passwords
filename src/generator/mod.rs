@@ -1,9 +1,18 @@
 extern crate random_pick;
 
 static NUMBERS: [char; 9] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-static LOWERCASE_LETTERS: [char; 23] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-static UPPERCASE_LETTERS: [char; 23] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-static SYMBOLS: [char; 28] = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '_', '-', '=', '}', '{', '[', ']', ':', ';', '"', '/', '?', '.', '>', '<', ',', '~'];
+static LOWERCASE_LETTERS: [char; 23] = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v',
+    'w', 'x', 'y', 'z',
+];
+static UPPERCASE_LETTERS: [char; 23] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+    'W', 'X', 'Y', 'Z',
+];
+static SYMBOLS: [char; 28] = [
+    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '_', '-', '=', '}', '{', '[', ']', ':',
+    ';', '"', '/', '?', '.', '>', '<', ',', '~',
+];
 
 /// This struct can help you generate passwords.
 #[derive(Debug, Clone, PartialEq)]
@@ -42,25 +51,25 @@ impl PasswordGenerator {
         if self.numbers {
             pool.push(&NUMBERS);
             sections_count += 1;
-            target_mask |= 0b00000001;
+            target_mask |= 0b0000_0001;
         }
 
         if self.lowercase_letters {
             pool.push(&LOWERCASE_LETTERS);
             sections_count += 1;
-            target_mask |= 0b00000010;
+            target_mask |= 0b0000_0010;
         }
 
         if self.uppercase_letters {
             pool.push(&UPPERCASE_LETTERS);
             sections_count += 1;
-            target_mask |= 0b00000100;
+            target_mask |= 0b0000_0100;
         }
 
         if self.symbols {
             pool.push(&SYMBOLS);
             sections_count += 1;
-            target_mask |= 0b00001000;
+            target_mask |= 0b0000_1000;
         }
 
         if !self.numbers && !self.lowercase_letters && !self.uppercase_letters && !self.symbols {
@@ -77,7 +86,8 @@ impl PasswordGenerator {
             while result.len() < count {
                 let c = count - result.len();
 
-                let random = random_pick::pick_multiple_from_multiple_slices(&pool, &[1], c * self.length);
+                let random =
+                    random_pick::pick_multiple_from_multiple_slices(&pool, &[1], c * self.length);
 
                 for i in (0..c).step_by(self.length) {
                     let start = i * self.length;
@@ -91,13 +101,13 @@ impl PasswordGenerator {
 
                         if !m {
                             if NUMBERS.contains(c) {
-                                mask |= 0b00000001;
+                                mask |= 0b0000_1000;
                             } else if LOWERCASE_LETTERS.contains(c) {
-                                mask |= 0b00000010;
+                                mask |= 0b0000_0010;
                             } else if UPPERCASE_LETTERS.contains(c) {
-                                mask |= 0b00000100;
+                                mask |= 0b0000_0100;
                             } else if SYMBOLS.contains(c) {
-                                mask |= 0b00001000;
+                                mask |= 0b0000_1000;
                             } else {
                                 continue;
                             }
@@ -105,10 +115,8 @@ impl PasswordGenerator {
                         }
                     }
 
-                    if !m {
-                        if mask != target_mask {
-                            continue;
-                        }
+                    if !m && mask != target_mask {
+                        continue;
                     }
 
                     result.push(password);
@@ -117,7 +125,8 @@ impl PasswordGenerator {
 
             Ok(result)
         } else {
-            let random = random_pick::pick_multiple_from_multiple_slices(&pool, &[1], count * self.length);
+            let random =
+                random_pick::pick_multiple_from_multiple_slices(&pool, &[1], count * self.length);
 
             let mut result = Vec::with_capacity(count);
 

@@ -1,4 +1,4 @@
-use ::std::collections::HashMap;
+use std::collections::HashMap;
 
 #[cfg(feature = "common-password")]
 #[derive(Debug, Clone, PartialEq)]
@@ -92,59 +92,79 @@ impl AnalyzedPassword {
 
 #[cfg(feature = "common-password")]
 macro_rules! gen_analyzed_password {
-    ($password:ident, $length:ident, $spaces_count:ident, $numbers_count:ident, $lowercase_letters_count:ident, $uppercase_letters_count:ident,
-      $symbols_count:ident, $other_characters_count:ident, $consecutive_count:ident, $non_consecutive_count:ident, $progressive_count:ident,
-        $is_common:ident) => {
-        {
-            let $is_common = is_common_password(&$password);
-            AnalyzedPassword {
-                $password,
-                $length,
-                $spaces_count,
-                $numbers_count,
-                $lowercase_letters_count,
-                $uppercase_letters_count,
-                $symbols_count,
-                $other_characters_count,
-                $consecutive_count,
-                $non_consecutive_count,
-                $progressive_count,
-                $is_common
-            }
+    (
+        $password:ident,
+        $length:ident,
+        $spaces_count:ident,
+        $numbers_count:ident,
+        $lowercase_letters_count:ident,
+        $uppercase_letters_count:ident,
+        $symbols_count:ident,
+        $other_characters_count:ident,
+        $consecutive_count:ident,
+        $non_consecutive_count:ident,
+        $progressive_count:ident,
+        $is_common:ident
+    ) => {{
+        let $is_common = is_common_password(&$password);
+        AnalyzedPassword {
+            $password,
+            $length,
+            $spaces_count,
+            $numbers_count,
+            $lowercase_letters_count,
+            $uppercase_letters_count,
+            $symbols_count,
+            $other_characters_count,
+            $consecutive_count,
+            $non_consecutive_count,
+            $progressive_count,
+            $is_common,
         }
-    };
+    }};
 }
 
 #[cfg(not(feature = "common-password"))]
 macro_rules! gen_analyzed_password {
-    ($password:ident, $length:ident, $spaces_count:ident, $numbers_count:ident, $lowercase_letters_count:ident, $uppercase_letters_count:ident,
-      $symbols_count:ident, $other_characters_count:ident, $consecutive_count:ident, $non_consecutive_count:ident, $progressive_count:ident,
-        $is_common:ident) => {
-        {
-            AnalyzedPassword {
-                $password,
-                $length,
-                $spaces_count,
-                $numbers_count,
-                $lowercase_letters_count,
-                $uppercase_letters_count,
-                $symbols_count,
-                $other_characters_count,
-                $consecutive_count,
-                $non_consecutive_count,
-                $progressive_count
-            }
+    (
+        $password:ident,
+        $length:ident,
+        $spaces_count:ident,
+        $numbers_count:ident,
+        $lowercase_letters_count:ident,
+        $uppercase_letters_count:ident,
+        $symbols_count:ident,
+        $other_characters_count:ident,
+        $consecutive_count:ident,
+        $non_consecutive_count:ident,
+        $progressive_count:ident,
+        $is_common:ident
+    ) => {{
+        AnalyzedPassword {
+            $password,
+            $length,
+            $spaces_count,
+            $numbers_count,
+            $lowercase_letters_count,
+            $uppercase_letters_count,
+            $symbols_count,
+            $other_characters_count,
+            $consecutive_count,
+            $non_consecutive_count,
+            $progressive_count,
         }
-    };
+    }};
 }
 
 #[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
-static COMMON_PASSWORDS: [&'static str; 422054] = include!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
+static COMMON_PASSWORDS: [&'static str; 422054] =
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
 
 #[cfg(debug_assertions)]
 #[cfg(feature = "common-password")]
-static COMMON_PASSWORDS: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
+static COMMON_PASSWORDS: &'static str =
+    include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
 
 #[cfg(debug_assertions)]
 #[cfg(feature = "common-password")]
@@ -244,7 +264,11 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
             lowercase_letters_count += 1;
         } else if char_code == 32 {
             spaces_count += 1;
-        } else if char_code >= 33 && char_code <= 47 || char_code >= 58 && char_code <= 64 || char_code >= 91 && char_code <= 96 || char_code >= 123 && char_code <= 126 {
+        } else if char_code >= 33 && char_code <= 47
+            || char_code >= 58 && char_code <= 64
+            || char_code >= 91 && char_code <= 96
+            || char_code >= 123 && char_code <= 126
+        {
             symbols_count += 1;
         } else {
             other_characters_count += 1;
@@ -261,6 +285,18 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
 
     let password = password.to_string();
 
-    gen_analyzed_password!(password, length, spaces_count, numbers_count, lowercase_letters_count, uppercase_letters_count,
-        symbols_count, other_characters_count, consecutive_count, non_consecutive_count, progressive_count, is_common)
+    gen_analyzed_password!(
+        password,
+        length,
+        spaces_count,
+        numbers_count,
+        lowercase_letters_count,
+        uppercase_letters_count,
+        symbols_count,
+        other_characters_count,
+        consecutive_count,
+        non_consecutive_count,
+        progressive_count,
+        is_common
+    )
 }

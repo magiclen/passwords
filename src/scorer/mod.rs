@@ -1,4 +1,4 @@
-use ::AnalyzedPassword;
+use crate::AnalyzedPassword;
 
 #[cfg(feature = "common-password")]
 #[inline]
@@ -35,9 +35,7 @@ pub fn score(analyzed_password: &AnalyzedPassword) -> f64 {
         9 => 88f64,
         10 => 95f64,
         11 => 100f64,
-        _ => {
-            (100 + analyzed_password.length() - 11) as f64
-        }
+        _ => (100 + analyzed_password.length() - 11) as f64,
     };
 
     let mut score = max_score;
@@ -60,18 +58,29 @@ pub fn score(analyzed_password: &AnalyzedPassword) -> f64 {
         if analyzed_password.spaces_count() == 0 {
             score -= max_score * 0.1;
         }
-        if analyzed_password.lowercase_letters_count() >= 1 && analyzed_password.uppercase_letters_count() >= 1 {
+        if analyzed_password.lowercase_letters_count() >= 1
+            && analyzed_password.uppercase_letters_count() >= 1
+        {
             score += 1f64;
         }
         if analyzed_password.symbols_count() >= 1 {
             score += 1f64;
         }
 
-        score -= max_score * (analyzed_password.consecutive_count() as f64 / analyzed_password.length() as f64 / 5f64);
+        score -= max_score
+            * (analyzed_password.consecutive_count() as f64
+                / analyzed_password.length() as f64
+                / 5f64);
 
-        score -= max_score * (analyzed_password.progressive_count() as f64 / analyzed_password.length() as f64 / 5f64);
+        score -= max_score
+            * (analyzed_password.progressive_count() as f64
+                / analyzed_password.length() as f64
+                / 5f64);
 
-        score -= max_score * (analyzed_password.non_consecutive_count() as f64 / analyzed_password.length() as f64 / 10f64);
+        score -= max_score
+            * (analyzed_password.non_consecutive_count() as f64
+                / analyzed_password.length() as f64
+                / 10f64);
     }
 
     if score < 0f64 {

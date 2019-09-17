@@ -1,12 +1,15 @@
 extern crate passwords;
 
+#[macro_use]
+extern crate assert_approx_eq;
+
 #[test]
 fn simple_password() {
     let password = "kq4zpz13";
 
     let analyzed = passwords::analyzer::analyze(password);
 
-    assert_eq!(62f64, passwords::scorer::score(&analyzed));
+    assert_approx_eq!(62f64, passwords::scorer::score(&analyzed));
 }
 
 #[test]
@@ -15,7 +18,7 @@ fn strong_password() {
 
     let analyzed = passwords::analyzer::analyze(password);
 
-    assert_eq!(100f64, passwords::scorer::score(&analyzed));
+    assert_approx_eq!(100f64, passwords::scorer::score(&analyzed));
 }
 
 #[test]
@@ -25,8 +28,8 @@ fn common_password() {
     let analyzed = passwords::analyzer::analyze(password);
 
     if cfg!(feature = "common-password") {
-        assert_eq!(4.8f64, passwords::scorer::score(&analyzed)); // "abc123" is common, so the score is punitively the original divided by 5
+        assert_approx_eq!(4.8f64, passwords::scorer::score(&analyzed)); // "abc123" is common, so the score is punitively the original divided by 5
     } else {
-        assert_eq!(24f64, passwords::scorer::score(&analyzed));
+        assert_approx_eq!(24f64, passwords::scorer::score(&analyzed));
     }
 }
