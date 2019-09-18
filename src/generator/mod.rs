@@ -101,7 +101,7 @@ impl PasswordGenerator {
 
                         if !m {
                             if NUMBERS.contains(c) {
-                                mask |= 0b0000_1000;
+                                mask |= 0b0000_0001;
                             } else if LOWERCASE_LETTERS.contains(c) {
                                 mask |= 0b0000_0010;
                             } else if UPPERCASE_LETTERS.contains(c) {
