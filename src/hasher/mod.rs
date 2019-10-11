@@ -1,12 +1,6 @@
 #![cfg(feature = "crypto")]
 
-extern crate crypto;
-extern crate rand;
-
-use self::rand::RngCore;
-
-use self::crypto::digest::Digest;
-use self::crypto::md5::Md5;
+use rand::RngCore;
 
 /// Generate a random 16-byte salt.
 pub fn gen_salt() -> [u8; 16] {
@@ -44,17 +38,10 @@ pub fn bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
     let salt = salt.as_ref();
 
     if salt.len() != 16 {
-        let mut new_salt = [0u8; 16];
-
-        let mut md5 = Md5::new();
-
-        md5.input(salt);
-
-        md5.result(&mut new_salt);
-
-        crypto::bcrypt::bcrypt(cost as u32, &new_salt, password, &mut result);
+        let new_salt = md5::compute(salt);
+        bcrypt::bcrypt(cost as u32, &*new_salt, password, &mut result);
     } else {
-        crypto::bcrypt::bcrypt(cost as u32, salt, password, &mut result);
+        bcrypt::bcrypt(cost as u32, salt, password, &mut result);
     }
 
     Ok(result)
