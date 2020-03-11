@@ -1,6 +1,6 @@
 extern crate random_pick;
 
-static NUMBERS: [char; 9] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+static NUMBERS: [char; 8] = ['2', '3', '4', '5', '6', '7', '8', '9'];
 static LOWERCASE_LETTERS: [char; 23] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v',
     'w', 'x', 'y', 'z',
@@ -20,7 +20,7 @@ pub struct PasswordGenerator {
     /// The length of the generated passwords.
     pub length: usize,
     /// Passwords are allowed to, or must if the strict is true, contain a number or numbers.
-    /// Numbers are `123456789`. (0 is excluded)
+    /// Numbers are `23456789`. (0, 1 are excluded)
     pub numbers: bool,
     /// Passwords are allowed to, or must if the strict is true, contain a lowercase letter or lowercase letters.
     /// Lowercase letters are `abcdefghjkmnpqrstuvwxyz`. (i, l, o are excluded)
