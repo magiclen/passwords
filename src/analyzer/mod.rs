@@ -283,8 +283,6 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
 
     non_consecutive_count -= consecutive_count;
 
-    let password = password.to_string();
-
     gen_analyzed_password!(
         password,
         length,

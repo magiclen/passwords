@@ -4,7 +4,7 @@ This crate provides useful tools to generate multiple readable passwords, as wel
 
 ## Generator
 
-`PasswordGenerator` can be used for generating passwords which consist optional numbers, lowercase letters, uppercase letters and symbols.
+`PasswordGenerator` can be used for generating passwords which consist optional numbers, lowercase letters, uppercase letters, symbols and spaces.
 
 ```rust
 extern crate passwords;
@@ -17,11 +17,50 @@ let pg = PasswordGenerator {
        lowercase_letters: true,
        uppercase_letters: true,
        symbols: true,
+       spaces: true,
+       exclude_similar_characters: false,
        strict: true,
    };
 
 println!("{}", pg.generate_one().unwrap());
 println!("{:?}", pg.generate(5).unwrap());
+```
+
+It also has a fluent interface.
+
+```rust
+extern crate passwords;
+
+use passwords::PasswordGenerator;
+
+let pg = PasswordGenerator::new().length(8).numbers(true).lowercase_letters(true).uppercase_letters(true).symbols(true).spaces(true).exclude_similar_characters(true).strict(true);
+
+println!("{}", pg.generate_one().unwrap());
+println!("{:?}", pg.generate(5).unwrap());
+```
+
+The `generate` method has been optimized for multiple generation. Don't reuse the `generate_one` method to generate multiple passwords. If the count of passwords can't be determined, use the `try_iter` method to create a `PasswordGeneratorIter` instance which implements the `Iterator` trait and can re-generate passwords more efficiently.
+
+```rust
+extern crate passwords;
+
+use passwords::PasswordGenerator;
+
+let pgi = PasswordGenerator::new().try_iter().unwrap();
+
+println!("{}", pgi.generate_one());
+println!("{:?}", pgi.generate(5));
+```
+
+```rust
+extern crate passwords;
+
+use passwords::PasswordGenerator;
+
+let mut pgi = PasswordGenerator::new().try_iter().unwrap();
+
+println!("{}", pgi.next().unwrap());
+println!("{}", pgi.next().unwrap());
 ```
 
 ## Hasher
