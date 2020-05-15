@@ -73,14 +73,14 @@ version = "*"
 features = ["crypto"]
 ```
 
-Then, `bcrypt`, `identify_bcrypt` and `gen_salt` functions in the `hasher` module are available.
+Then, `bcrypt`, `identify_bcrypt`, `bcrypt_format`, `identify_bcrypt_format`, `get_password_with_null_terminated_byte` and `gen_salt` functions in the `hasher` module are available.
 
 ```rust,ignore
 extern crate passwords;
 
 let salt = passwords::gen_salt();
-let hashed = passwords::bcrypt(10, &salt, "password").unwrap();
-assert!(passwords::identify_bcrypt(10, &salt, "password", &hashed).unwrap());
+let hashed = passwords::bcrypt(10, &salt, "password\0").unwrap();
+assert!(passwords::identify_bcrypt(10, &salt, "password\0", &hashed).unwrap());
 ```
 
 ## Analyzer

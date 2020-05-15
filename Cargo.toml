@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "3.0.1"
+version = "3.1.0"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/passwords"
@@ -16,9 +16,10 @@ repository = "magiclen/passwords"
 branch = "master"
 
 [dependencies]
-rand = "0.7"
 random-pick = "1.2.8"
+rand = { version = "0.7", optional = true }
 md5 = { version = "0.7", optional = true }
+base64 = { version = "0.12.1", optional = true }
 bcrypt = { version = "0.8.0", optional = true }
 
 [dev-dependencies]
@@ -26,7 +27,7 @@ regex = "1"
 assert_approx_eq = "1.1"
 
 [features]
-crypto = ["md5", "bcrypt"]
+crypto = ["md5", "bcrypt", "base64"]
 common-password = []
 
 [package.metadata.docs.rs]
