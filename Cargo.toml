@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "3.1.0"
+version = "3.1.1"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/passwords"
@@ -27,7 +27,7 @@ regex = "1"
 assert_approx_eq = "1.1"
 
 [features]
-crypto = ["md5", "bcrypt", "base64"]
+crypto = ["md5", "bcrypt", "base64", "rand"]
 common-password = []
 
 [package.metadata.docs.rs]
