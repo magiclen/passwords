@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "3.1.1"
+version = "3.1.2"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/passwords"
@@ -10,6 +10,7 @@ categories = ["algorithms"]
 description= "This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them."
 readme = "README.md"
 license = "MIT"
+include = ["src/**/*", "Cargo.toml", "data/**/*"]
 
 [badges.travis-ci]
 repository = "magiclen/passwords"
