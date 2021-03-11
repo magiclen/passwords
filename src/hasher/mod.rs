@@ -17,9 +17,7 @@ pub fn gen_salt() -> [u8; 16] {
 }
 
 /// Check the password and make it terminated with a null byte, `0u8`.
-pub fn get_password_with_null_terminated_byte<T: ?Sized + AsRef<[u8]>>(
-    password: &T,
-) -> Cow<[u8]> {
+pub fn get_password_with_null_terminated_byte<T: ?Sized + AsRef<[u8]>>(password: &T) -> Cow<[u8]> {
     let password = password.as_ref();
 
     let password_len = password.len();

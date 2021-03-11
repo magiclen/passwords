@@ -256,18 +256,18 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
                 }
             }
         }
-        if char_code >= 48 && char_code <= 57 {
+        if (48..=57).contains(&char_code) {
             numbers_count += 1;
-        } else if char_code >= 65 && char_code <= 90 {
+        } else if (65..=90).contains(&char_code) {
             uppercase_letters_count += 1;
-        } else if char_code >= 97 && char_code <= 122 {
+        } else if (97..=122).contains(&char_code) {
             lowercase_letters_count += 1;
         } else if char_code == 32 {
             spaces_count += 1;
-        } else if char_code >= 33 && char_code <= 47
-            || char_code >= 58 && char_code <= 64
-            || char_code >= 91 && char_code <= 96
-            || char_code >= 123 && char_code <= 126
+        } else if (33..=47).contains(&char_code)
+            || (58..=64).contains(&char_code)
+            || (91..=96).contains(&char_code)
+            || (123..=126).contains(&char_code)
         {
             symbols_count += 1;
         } else {
