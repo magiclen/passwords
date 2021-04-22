@@ -46,15 +46,12 @@ impl PasswordGeneratorIter {
     pub fn generate(&self, count: usize) -> Vec<String> {
         debug_assert_ne!(0, self.target_mask);
 
+        let mut result = Vec::with_capacity(count);
+
+        let random =
+            random_pick::pick_multiple_from_multiple_slices(&self.pool, &[1], count * self.length);
+
         if self.strict {
-            let mut result = Vec::with_capacity(count);
-
-            let random = random_pick::pick_multiple_from_multiple_slices(
-                &self.pool,
-                &[1],
-                count * self.length,
-            );
-
             let mut i = 0;
 
             while i < count {
@@ -110,17 +107,7 @@ impl PasswordGeneratorIter {
 
                 i += 1;
             }
-
-            result
         } else {
-            let mut result = Vec::with_capacity(count);
-
-            let random = random_pick::pick_multiple_from_multiple_slices(
-                &self.pool,
-                &[1],
-                count * self.length,
-            );
-
             for i in 0..count {
                 let start = i * self.length;
                 let mut password = String::with_capacity(self.length);
@@ -131,9 +118,9 @@ impl PasswordGeneratorIter {
 
                 result.push(password);
             }
-
-            result
         }
+
+        result
     }
 
     /// Generate a random password.
