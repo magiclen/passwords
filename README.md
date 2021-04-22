@@ -1,7 +1,7 @@
 Passwords
 ====================
 
-[![Build Status](https://travis-ci.org/magiclen/passwords.svg?branch=master)](https://travis-ci.org/magiclen/passwords)
+[![CI](https://github.com/magiclen/passwords/actions/workflows/ci.yml/badge.svg)](https://github.com/magiclen/passwords/actions/workflows/ci.yml)
 
 This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them.
 

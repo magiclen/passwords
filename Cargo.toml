@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "3.1.4"
+version = "3.1.5"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/passwords"
@@ -11,10 +11,6 @@ description = "This crate provides useful tools to generate multiple readable pa
 readme = "README.md"
 license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE", "data/**/*"]
-
-[badges.travis-ci]
-repository = "magiclen/passwords"
-branch = "master"
 
 [dependencies]
 random-pick = "1.2.8"
