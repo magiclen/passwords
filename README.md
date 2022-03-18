@@ -10,8 +10,6 @@ This crate provides useful tools to generate multiple readable passwords, as wel
 `PasswordGenerator` can be used for generating passwords which consist optional numbers, lowercase letters, uppercase letters, symbols and spaces.
 
 ```rust
-extern crate passwords;
-
 use passwords::PasswordGenerator;
 
 let pg = PasswordGenerator {
@@ -32,8 +30,6 @@ println!("{:?}", pg.generate(5).unwrap());
 It also has a fluent interface.
 
 ```rust
-extern crate passwords;
-
 use passwords::PasswordGenerator;
 
 let pg = PasswordGenerator::new().length(8).numbers(true).lowercase_letters(true).uppercase_letters(true).symbols(true).spaces(true).exclude_similar_characters(true).strict(true);
@@ -45,8 +41,6 @@ println!("{:?}", pg.generate(5).unwrap());
 The `generate` method has been optimized for multiple generation. Don't reuse the `generate_one` method to generate multiple passwords. If the count of passwords can't be determined, use the `try_iter` method to create a `PasswordGeneratorIter` instance which implements the `Iterator` trait and can re-generate passwords more efficiently.
 
 ```rust
-extern crate passwords;
-
 use passwords::PasswordGenerator;
 
 let pgi = PasswordGenerator::new().try_iter().unwrap();
@@ -56,8 +50,6 @@ println!("{:?}", pgi.generate(5));
 ```
 
 ```rust
-extern crate passwords;
-
 use passwords::PasswordGenerator;
 
 let mut pgi = PasswordGenerator::new().try_iter().unwrap();
@@ -79,7 +71,6 @@ features = ["crypto"]
 Then, `bcrypt`, `identify_bcrypt`, `bcrypt_format`, `identify_bcrypt_format`, `get_password_with_null_terminated_byte` and `gen_salt` functions in the `hasher` module are available.
 
 ```rust
-extern crate passwords;
 use passwords::hasher;
 
 let salt = hasher::gen_salt();
@@ -96,8 +87,6 @@ Before the analyzer analyzes a password, it filters the password in order to rem
 Therefore, you can use this analyzer as a password guard before you store the input password (or generally hash it first and then store) to your database.
 
 ```rust
-extern crate passwords;
-
 use passwords::analyzer;
 
 let password = "ZYX[$BCkQB中文}%A_3456]  H(\rg";
@@ -134,8 +123,6 @@ You should notice that after you enable the **common-password** feature, the tim
 After analyzing a password, you can use the `score` function in the `scorer` module to score it.
 
 ```rust
-extern crate passwords;
-
 use passwords::analyzer;
 use passwords::scorer;
 

@@ -1,6 +1,3 @@
-extern crate passwords;
-extern crate regex;
-
 use regex::Regex;
 
 use passwords::PasswordGenerator;

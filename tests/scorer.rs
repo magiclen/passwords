@@ -1,7 +1,4 @@
-extern crate passwords;
-
-#[macro_use]
-extern crate assert_approx_eq;
+use assert_approx_eq::assert_approx_eq;
 
 #[test]
 fn simple_password() {

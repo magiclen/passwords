@@ -1,7 +1,5 @@
 #![cfg(feature = "crypto")]
 
-extern crate passwords;
-
 #[test]
 fn null_terminated_byte() {
     let password = passwords::hasher::get_password_with_null_terminated_byte("password");

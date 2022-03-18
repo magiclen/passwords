@@ -1,7 +1,5 @@
 #![cfg(feature = "crypto")]
 
-extern crate rand;
-
 use std::borrow::Cow;
 
 use rand::RngCore;

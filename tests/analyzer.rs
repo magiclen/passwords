@@ -1,5 +1,3 @@
-extern crate passwords;
-
 #[test]
 fn analyze() {
     let password = "ZYX[$BCkQB中文}%A_3456]  H(\rg";
