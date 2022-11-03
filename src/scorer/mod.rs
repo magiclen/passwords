@@ -83,11 +83,7 @@ pub fn score(analyzed_password: &AnalyzedPassword) -> f64 {
                 / 10f64);
     }
 
-    if score < 0f64 {
-        score = 0f64;
-    } else if score > max_score {
-        score = max_score;
-    }
+    score = score.clamp(0f64, max_score);
 
     score += analyzed_password.other_characters_count() as f64 * 20f64;
 

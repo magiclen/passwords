@@ -172,7 +172,7 @@ static COMMON_PASSWORDS: &str =
 pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
     let target = format!("\"{}\"", password.as_ref());
 
-    COMMON_PASSWORDS.contains(&target.as_str())
+    COMMON_PASSWORDS.contains(target.as_str())
 }
 
 #[cfg(not(debug_assertions))]

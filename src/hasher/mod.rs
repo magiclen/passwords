@@ -68,14 +68,16 @@ pub fn bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
 
     let salt = salt.as_ref();
 
-    let mut hash = [0u8; 24];
+    let hash = if salt.len() != 16 {
+        let new_salt = *md5::compute(salt);
 
-    if salt.len() != 16 {
-        let new_salt = md5::compute(salt);
-        bcrypt::bcrypt(cost as u32, &*new_salt, password, &mut hash);
+        bcrypt::bcrypt(cost as u32, new_salt, password)
     } else {
-        bcrypt::bcrypt(cost as u32, salt, password, &mut hash);
-    }
+        let mut salt_fixed = [0u8; 16];
+        salt_fixed.copy_from_slice(salt);
+
+        bcrypt::bcrypt(cost as u32, salt_fixed, password)
+    };
 
     Ok(hash)
 }
@@ -123,17 +125,21 @@ pub fn bcrypt_format<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
 
     let salt = salt.as_ref();
 
-    let mut hash = [0u8; 24];
-
-    let salt = if salt.len() != 16 {
+    let (hash, salt) = if salt.len() != 16 {
         let new_salt = *md5::compute(salt);
-        bcrypt::bcrypt(cost as u32, &new_salt, password, &mut hash);
 
-        base64::encode_config(&new_salt, base64::BCRYPT)
+        let hash = bcrypt::bcrypt(cost as u32, new_salt, password);
+        let salt = base64::encode_config(new_salt, base64::BCRYPT);
+
+        (hash, salt)
     } else {
-        bcrypt::bcrypt(cost as u32, salt, password, &mut hash);
+        let mut salt_fixed = [0u8; 16];
+        salt_fixed.copy_from_slice(salt);
 
-        base64::encode_config(salt, base64::BCRYPT)
+        let hash = bcrypt::bcrypt(cost as u32, salt_fixed, password);
+        let salt = base64::encode_config(salt, base64::BCRYPT);
+
+        (hash, salt)
     };
 
     let hash = base64::encode_config(&hash[..23], base64::BCRYPT);
