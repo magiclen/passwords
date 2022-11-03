@@ -138,14 +138,14 @@ impl Iterator for PasswordGeneratorIter {
 
     #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
-        (usize::max_value(), None)
+        (usize::MAX, None)
     }
 
     #[inline]
     fn count(self) -> usize
     where
         Self: Sized, {
-        usize::max_value()
+        usize::MAX
     }
 
     #[inline]

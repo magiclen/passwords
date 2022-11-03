@@ -197,8 +197,8 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
     let mut non_consecutive_count = 0usize;
     let mut progressive_count = 0usize;
 
-    let mut last_char_code: u32 = <u32>::max_value();
-    let mut last_step: i32 = <i32>::max_value();
+    let mut last_char_code = u32::MAX;
+    let mut last_step = i32::MAX;
     let mut last_step_consecutive = false;
     let mut last_step_repeat = false;
     let mut last_char_code_consecutive = false;
