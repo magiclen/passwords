@@ -74,8 +74,12 @@ Then, `bcrypt`, `identify_bcrypt`, `bcrypt_format`, `identify_bcrypt_format`, `g
 use passwords::hasher;
 
 let salt = hasher::gen_salt();
+
 let hashed = hasher::bcrypt(10, &salt, "password\0").unwrap();
-assert!(hasher::identify_bcrypt(10, &salt, "password\0", &hashed).unwrap());
+assert!(unsafe { hasher::identify_bcrypt(10, &salt, "password\0", &hashed) });
+
+let mcf = hasher::bcrypt_format(10, &salt, "password\0").unwrap();
+assert!(unsafe { hasher::identify_bcrypt_format("password\0", mcf) });
 ```
 
 ## Analyzer

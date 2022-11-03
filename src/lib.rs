@@ -68,7 +68,8 @@ features = ["crypto"]
 Then, `bcrypt`, `identify_bcrypt`, `bcrypt_format`, `identify_bcrypt_format`, `get_password_with_null_terminated_byte` and `gen_salt` functions in the `hasher` module are available.
 
 ```rust
-# #![cfg(feature = "crypto")]
+# #[cfg(feature = "crypto")]
+# {
 use passwords::hasher;
 
 let salt = hasher::gen_salt();
@@ -78,6 +79,7 @@ assert!(unsafe { hasher::identify_bcrypt(10, &salt, "password\0", &hashed) });
 
 let mcf = hasher::bcrypt_format(10, &salt, "password\0").unwrap();
 assert!(unsafe { hasher::identify_bcrypt_format("password\0", mcf) });
+# }
 ```
 
 ## Analyzer
