@@ -2,6 +2,7 @@
 
 use std::borrow::Cow;
 
+use base64::{engine::DecodePaddingMode, Engine};
 use rand::RngCore;
 
 /// Generate a random 16-byte salt.
@@ -125,11 +126,16 @@ pub fn bcrypt_format<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
 
     let salt = salt.as_ref();
 
+    let base64_bcrypt = base64::engine::general_purpose::GeneralPurpose::new(
+        &base64::alphabet::BCRYPT,
+        base64::engine::general_purpose::GeneralPurposeConfig::new().with_encode_padding(false),
+    );
+
     let (hash, salt) = if salt.len() != 16 {
         let new_salt = *md5::compute(salt);
 
         let hash = bcrypt::bcrypt(cost as u32, new_salt, password);
-        let salt = base64::encode_config(new_salt, base64::BCRYPT);
+        let salt = base64_bcrypt.encode(new_salt);
 
         (hash, salt)
     } else {
@@ -137,12 +143,12 @@ pub fn bcrypt_format<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
         salt_fixed.copy_from_slice(salt);
 
         let hash = bcrypt::bcrypt(cost as u32, salt_fixed, password);
-        let salt = base64::encode_config(salt, base64::BCRYPT);
+        let salt = base64_bcrypt.encode(salt);
 
         (hash, salt)
     };
 
-    let hash = base64::encode_config(&hash[..23], base64::BCRYPT);
+    let hash = base64_bcrypt.encode(&hash[..23]);
 
     Ok(format!("$2b${:02}${}{}", cost, salt, hash))
 }
@@ -175,15 +181,18 @@ pub unsafe fn identify_bcrypt_format<T: ?Sized + AsRef<[u8]>, S: AsRef<str>>(
         Err(_) => return false,
     };
 
-    let salt = match base64::decode_config(
-        &hashed_format[cost_index + 3..cost_index + 25],
-        base64::BCRYPT,
-    ) {
+    let base64_bcrypt = base64::engine::general_purpose::GeneralPurpose::new(
+        &base64::alphabet::BCRYPT,
+        base64::engine::general_purpose::GeneralPurposeConfig::new()
+            .with_decode_padding_mode(DecodePaddingMode::RequireNone),
+    );
+
+    let salt = match base64_bcrypt.decode(&hashed_format[cost_index + 3..cost_index + 25]) {
         Ok(salt) => salt,
         Err(_) => return false,
     };
 
-    let hashed = match base64::decode_config(&hashed_format[cost_index + 25..], base64::BCRYPT) {
+    let hashed = match base64_bcrypt.decode(&hashed_format[cost_index + 25..]) {
         Ok(hashed) => hashed,
         Err(_) => return false,
     };

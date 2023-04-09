@@ -1,6 +1,5 @@
-use regex::Regex;
-
 use passwords::PasswordGenerator;
+use regex::Regex;
 
 const PASSWORD_COUNT: usize = 5000;
 

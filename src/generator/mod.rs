@@ -33,10 +33,10 @@ static SPACE: [char; 1] = [' '];
 /// This struct can help you continually generate passwords.
 #[derive(Debug, Clone, PartialEq)]
 pub struct PasswordGeneratorIter {
-    pool: Vec<&'static [char]>,
-    length: usize,
+    pool:        Vec<&'static [char]>,
+    length:      usize,
     target_mask: u8,
-    strict: bool,
+    strict:      bool,
 }
 
 impl PasswordGeneratorIter {
@@ -167,27 +167,27 @@ pub struct PasswordGenerator {
     /// The length of the generated passwords.
     ///
     /// Default: `8`
-    pub length: usize,
+    pub length:                     usize,
     /// Passwords are allowed to, or must if the strict is true, contain a number or numbers.
     ///
     /// Default: `true`
-    pub numbers: bool,
+    pub numbers:                    bool,
     /// Passwords are allowed to, or must if the strict is true, contain a lowercase letter or lowercase letters.
     ///
     /// Default: `true`
-    pub lowercase_letters: bool,
+    pub lowercase_letters:          bool,
     /// Passwords are allowed to, or must if the strict is true, contain an uppercase letter or uppercase letters.
     ///
     /// Default: `false`
-    pub uppercase_letters: bool,
+    pub uppercase_letters:          bool,
     /// Passwords are allowed to, or must if the strict is true, contain a symbol or symbols.
     ///
     /// Default: `false`
-    pub symbols: bool,
+    pub symbols:                    bool,
     /// Passwords are allowed to, or must if the strict is true, contain a space or spaces.
     ///
     /// Default: `false`
-    pub spaces: bool,
+    pub spaces:                     bool,
     /// Whether to exclude similar characters, ``iI1loO0"'`|``.
     ///
     /// Default: `false`
@@ -195,7 +195,7 @@ pub struct PasswordGenerator {
     /// Whether the password rules are strict.
     ///
     /// Default: `false`
-    pub strict: bool,
+    pub strict:                     bool,
 }
 
 impl PasswordGenerator {
@@ -215,14 +215,14 @@ impl PasswordGenerator {
     /// ```
     pub const fn new() -> PasswordGenerator {
         PasswordGenerator {
-            length: 8,
-            numbers: true,
-            lowercase_letters: true,
-            uppercase_letters: false,
-            symbols: false,
-            spaces: false,
+            length:                     8,
+            numbers:                    true,
+            lowercase_letters:          true,
+            uppercase_letters:          false,
+            symbols:                    false,
+            spaces:                     false,
             exclude_similar_characters: false,
-            strict: false,
+            strict:                     false,
         }
     }
 

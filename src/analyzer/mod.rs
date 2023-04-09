@@ -4,35 +4,35 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, PartialEq)]
 /// The struct of an analysis.
 pub struct AnalyzedPassword {
-    password: String,
-    length: usize,
-    spaces_count: usize,
-    numbers_count: usize,
+    password:                String,
+    length:                  usize,
+    spaces_count:            usize,
+    numbers_count:           usize,
     lowercase_letters_count: usize,
     uppercase_letters_count: usize,
-    symbols_count: usize,
-    other_characters_count: usize,
-    consecutive_count: usize,
-    non_consecutive_count: usize,
-    progressive_count: usize,
-    is_common: bool,
+    symbols_count:           usize,
+    other_characters_count:  usize,
+    consecutive_count:       usize,
+    non_consecutive_count:   usize,
+    progressive_count:       usize,
+    is_common:               bool,
 }
 
 #[cfg(not(feature = "common-password"))]
 #[derive(Debug, Clone, PartialEq)]
 /// The struct of an analysis.
 pub struct AnalyzedPassword {
-    password: String,
-    length: usize,
-    spaces_count: usize,
-    numbers_count: usize,
+    password:                String,
+    length:                  usize,
+    spaces_count:            usize,
+    numbers_count:           usize,
     lowercase_letters_count: usize,
     uppercase_letters_count: usize,
-    symbols_count: usize,
-    other_characters_count: usize,
-    consecutive_count: usize,
-    non_consecutive_count: usize,
-    progressive_count: usize,
+    symbols_count:           usize,
+    other_characters_count:  usize,
+    consecutive_count:       usize,
+    non_consecutive_count:   usize,
+    progressive_count:       usize,
 }
 
 impl AnalyzedPassword {
