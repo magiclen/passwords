@@ -22,7 +22,7 @@ bcrypt = { version = "0.14", optional = true }
 
 [dev-dependencies]
 regex = "1"
-assert_approx_eq = "1.1"
+assert-eq-float = "0.1"
 
 [features]
 crypto = ["md5", "bcrypt", "base64", "rand"]
