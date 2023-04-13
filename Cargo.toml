@@ -9,7 +9,6 @@ homepage = "https://magiclen.org/passwords"
 keywords = ["password", "score", "strength", "bcrypt", "generate"]
 categories = ["algorithms"]
 description = "This crate provides useful tools to generate multiple readable passwords, as well as analyze and score them."
-readme = "README.md"
 license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE", "data/**/*"]
 
