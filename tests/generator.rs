@@ -388,8 +388,8 @@ fn numbers_letters_symbols_exclude_similar() {
             .symbols(true)
             .exclude_similar_characters(true);
 
-        let re = Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~]{8}$")
-            .unwrap();
+        let re =
+            Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~]{8}$").unwrap();
 
         let results = pg.generate(PASSWORD_COUNT).unwrap();
 
@@ -405,8 +405,8 @@ fn numbers_letters_symbols_exclude_similar() {
             .strict(true)
             .exclude_similar_characters(true);
 
-        let re = Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~]{8}$")
-            .unwrap();
+        let re =
+            Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~]{8}$").unwrap();
         let re_n = Regex::new(r"[2-9]+").unwrap();
         let re_l = Regex::new(r"[a-hj-km-np-z]+").unwrap();
         let re_u = Regex::new(r"[A-HJ-NP-Z]+").unwrap();
@@ -473,8 +473,8 @@ fn visible_ascii_exclude_similar() {
             .spaces(true)
             .exclude_similar_characters(true);
 
-        let re = Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~ ]{8}$")
-            .unwrap();
+        let re =
+            Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~ ]{8}$").unwrap();
 
         let results = pg.generate(PASSWORD_COUNT).unwrap();
 
@@ -491,8 +491,8 @@ fn visible_ascii_exclude_similar() {
             .strict(true)
             .exclude_similar_characters(true);
 
-        let re = Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~ ]{8}$")
-            .unwrap();
+        let re =
+            Regex::new(r"^[2-9a-hj-km-np-zA-HJ-NP-Z!#$%&()*+,-./:;<=>?@\[\\\]^_{}~ ]{8}$").unwrap();
         let re_n = Regex::new(r"[2-9]+").unwrap();
         let re_l = Regex::new(r"[a-hj-km-np-z]+").unwrap();
         let re_u = Regex::new(r"[A-HJ-NP-Z]+").unwrap();
