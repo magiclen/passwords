@@ -1,3 +1,5 @@
+use rand::RngExt;
+
 static NUMBERS: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 static NUMBERS_EXCLUDE_SIMILAR: [char; 8] = ['2', '3', '4', '5', '6', '7', '8', '9'];
 
@@ -44,10 +46,37 @@ impl PasswordGeneratorIter {
     pub fn generate(&self, count: usize) -> Vec<String> {
         debug_assert_ne!(0, self.target_mask);
 
+        /// Pick multiple characters from multiple slices.
+        fn pick_multiple_chars_from_multiple_slices<'a>(
+            pool: &[&'a [char]],
+            count: usize,
+        ) -> Vec<&'a char> {
+            let total_len: usize = pool.iter().map(|slice| slice.len()).sum();
+
+            let mut rng = rand::rng();
+
+            let mut collected_chars = Vec::with_capacity(count);
+
+            for _ in 0..count {
+                let mut index: usize = rng.random_range(..total_len);
+
+                for slice in pool {
+                    if index < slice.len() {
+                        collected_chars.push(&slice[index]);
+
+                        break;
+                    }
+
+                    index -= slice.len();
+                }
+            }
+
+            collected_chars
+        }
+
         let mut result = Vec::with_capacity(count);
 
-        let random =
-            random_pick::pick_multiple_from_multiple_slices(&self.pool, &[1], count * self.length);
+        let random = pick_multiple_chars_from_multiple_slices(&self.pool, count * self.length);
 
         if self.strict {
             let mut i = 0;
@@ -87,11 +116,8 @@ impl PasswordGeneratorIter {
 
                 if !handle(&random, start, start + self.length, &mut password) {
                     loop {
-                        let random = random_pick::pick_multiple_from_multiple_slices(
-                            &self.pool,
-                            &[1],
-                            self.length,
-                        );
+                        let random =
+                            pick_multiple_chars_from_multiple_slices(&self.pool, self.length);
 
                         password.clear();
 

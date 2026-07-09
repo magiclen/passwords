@@ -2,21 +2,22 @@
 
 use std::borrow::Cow;
 
-use base64::{engine::DecodePaddingMode, Engine};
-use rand::RngCore;
+use base64::{Engine, engine::DecodePaddingMode};
 
 /// Generate a random 16-byte salt.
 #[inline]
 pub fn gen_salt() -> [u8; 16] {
     let mut salt = [0u8; 16];
 
-    rand::thread_rng().fill_bytes(&mut salt);
+    rand::fill(&mut salt);
 
     salt
 }
 
 /// Check the password and make it terminated with a null byte, `0u8`.
-pub fn get_password_with_null_terminated_byte<T: ?Sized + AsRef<[u8]>>(password: &T) -> Cow<[u8]> {
+pub fn get_password_with_null_terminated_byte<T: ?Sized + AsRef<[u8]>>(
+    password: &T,
+) -> Cow<'_, [u8]> {
     let password = password.as_ref();
 
     let password_len = password.len();
@@ -197,5 +198,5 @@ pub unsafe fn identify_bcrypt_format<T: ?Sized + AsRef<[u8]>, S: AsRef<str>>(
         Err(_) => return false,
     };
 
-    identify_bcrypt(cost, &salt, password, &hashed)
+    unsafe { identify_bcrypt(cost, &salt, password, &hashed) }
 }

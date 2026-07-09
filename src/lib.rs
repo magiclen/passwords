@@ -153,6 +153,8 @@ A password whose score is,
 * 99 ~ 100 is invulnerable
 */
 
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 /// Analyze passwords.
 pub mod analyzer;
 mod generator;
