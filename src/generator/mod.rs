@@ -1,4 +1,4 @@
-use rand::RngExt;
+use rand::{Rng, RngExt};
 
 static NUMBERS: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 static NUMBERS_EXCLUDE_SIMILAR: [char; 8] = ['2', '3', '4', '5', '6', '7', '8', '9'];
@@ -36,112 +36,73 @@ static SPACE: [char; 1] = [' '];
 #[derive(Debug, Clone, PartialEq)]
 pub struct PasswordGeneratorIter {
     pool:        Vec<&'static [char]>,
+    total_len:   usize,
     length:      usize,
     target_mask: u8,
     strict:      bool,
 }
 
 impl PasswordGeneratorIter {
+    #[inline]
+    fn pick_char<R: Rng + ?Sized>(&self, rng: &mut R) -> char {
+        let mut index = rng.random_range(..self.total_len);
+
+        for slice in &self.pool {
+            if index < slice.len() {
+                return slice[index];
+            }
+
+            index -= slice.len();
+        }
+
+        unreachable!()
+    }
+
+    fn fill_password<R: Rng + ?Sized>(&self, rng: &mut R, password: &mut String) -> u8 {
+        #[inline]
+        fn char_mask(c: char) -> u8 {
+            match c {
+                '0'..='9' => 0b0000_0001,
+                'a'..='z' => 0b0000_0010,
+                'A'..='Z' => 0b0000_0100,
+                '!'..='/' | ':'..='@' | '['..='`' | '{'..='~' => 0b0000_1000,
+                ' ' => 0b0001_0000,
+                _ => 0,
+            }
+        }
+
+        password.clear();
+
+        let mut mask = 0;
+
+        for _ in 0..self.length {
+            let c = self.pick_char(rng);
+
+            password.push(c);
+            mask |= char_mask(c);
+        }
+
+        mask
+    }
+
     /// Generate random passwords.
     pub fn generate(&self, count: usize) -> Vec<String> {
         debug_assert_ne!(0, self.target_mask);
 
-        /// Pick multiple characters from multiple slices.
-        fn pick_multiple_chars_from_multiple_slices<'a>(
-            pool: &[&'a [char]],
-            count: usize,
-        ) -> Vec<&'a char> {
-            let total_len: usize = pool.iter().map(|slice| slice.len()).sum();
-
-            let mut rng = rand::rng();
-
-            let mut collected_chars = Vec::with_capacity(count);
-
-            for _ in 0..count {
-                let mut index: usize = rng.random_range(..total_len);
-
-                for slice in pool {
-                    if index < slice.len() {
-                        collected_chars.push(&slice[index]);
-
-                        break;
-                    }
-
-                    index -= slice.len();
-                }
-            }
-
-            collected_chars
-        }
-
+        let mut rng = rand::rng();
         let mut result = Vec::with_capacity(count);
 
-        let random = pick_multiple_chars_from_multiple_slices(&self.pool, count * self.length);
+        for _ in 0..count {
+            let mut password = String::with_capacity(self.length);
+            let mut mask = self.fill_password(&mut rng, &mut password);
 
-        if self.strict {
-            let mut i = 0;
-
-            while i < count {
-                let start = i * self.length;
-
-                let mut password = String::with_capacity(self.length);
-
-                let handle = |random: &[&char], start: usize, end: usize, password: &mut String| {
-                    let mut mask: u8 = 0;
-                    let mut m = false;
-
-                    for &c in random[start..end].iter() {
-                        password.push(*c);
-
-                        if !m {
-                            if NUMBERS.contains(c) {
-                                mask |= 0b0000_0001;
-                            } else if LOWERCASE_LETTERS.contains(c) {
-                                mask |= 0b0000_0010;
-                            } else if UPPERCASE_LETTERS.contains(c) {
-                                mask |= 0b0000_0100;
-                            } else if SYMBOLS.contains(c) {
-                                mask |= 0b0000_1000;
-                            } else if ' '.eq(c) {
-                                mask |= 0b0001_0000;
-                            } else {
-                                continue;
-                            }
-                            m = mask == self.target_mask;
-                        }
-                    }
-
-                    m
-                };
-
-                if !handle(&random, start, start + self.length, &mut password) {
-                    loop {
-                        let random =
-                            pick_multiple_chars_from_multiple_slices(&self.pool, self.length);
-
-                        password.clear();
-
-                        if handle(&random, 0, self.length, &mut password) {
-                            break;
-                        }
-                    }
+            if self.strict {
+                while mask != self.target_mask {
+                    mask = self.fill_password(&mut rng, &mut password);
                 }
-
-                result.push(password);
-
-                i += 1;
             }
-        } else {
-            for i in 0..count {
-                let start = i * self.length;
-                let mut password = String::with_capacity(self.length);
 
-                for &c in random[start..start + self.length].iter() {
-                    password.push(*c);
-                }
-
-                result.push(password);
-            }
+            result.push(password);
         }
 
         result
@@ -403,6 +364,7 @@ impl PasswordGenerator {
             Err("The length of passwords is too short.")
         } else {
             Ok(PasswordGeneratorIter {
+                total_len: pool.iter().map(|slice| slice.len()).sum(),
                 pool,
                 length: self.length,
                 target_mask,

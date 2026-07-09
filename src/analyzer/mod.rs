@@ -158,8 +158,8 @@ macro_rules! gen_analyzed_password {
 
 #[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
-static COMMON_PASSWORDS: [&'static str; 422054] =
-    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
+static COMMON_PASSWORDS: &[&str] =
+    &include!(concat!(env!("CARGO_MANIFEST_DIR"), "/data/common-passwords.json"));
 
 #[cfg(debug_assertions)]
 #[cfg(feature = "common-password")]
