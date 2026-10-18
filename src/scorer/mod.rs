@@ -13,14 +13,17 @@ fn is_common(_: &AnalyzedPassword) -> bool {
 }
 
 /// Score a password by using its analysis.
-/// * 0 ~ 20 is very dangerous (may be cracked within few seconds)
+/// * 0 ~ 20 is very dangerous
 /// * 20 ~ 40 is dangerous
 /// * 40 ~ 60 is very weak
 /// * 60 ~ 80 is weak
 /// * 80 ~ 90 is good
 /// * 90 ~ 95 is strong
 /// * 95 ~ 99 is very strong
-/// * 99 ~ 100 is invulnerable
+/// * 99 ~ 100 is the highest score
+///
+/// These scores are heuristic estimates and do not predict cracking time or guarantee security.
+/// Other characters, including repeated non-ASCII characters, can raise the score to 100.
 pub fn score(analyzed_password: &AnalyzedPassword) -> f64 {
     let max_score = match analyzed_password.length() - analyzed_password.other_characters_count() {
         0 => 0f64,

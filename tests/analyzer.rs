@@ -17,6 +17,37 @@ fn analyze() {
     assert_eq!(7, analyzed.progressive_count()); // Progressive characters are "ZYX" and "3456". "BC" is not counted, because its length is only 2, not three or more.
 }
 
+#[test]
+fn progressive_characters() {
+    for (password, expected) in [
+        (" A", 0),
+        ("!C", 0),
+        ("aÃ", 0),
+        ("abc", 3),
+        ("ZYX", 3),
+        ("aceg", 4),
+        ("abbc", 0),
+        ("abbbc", 0),
+        ("abcba", 5),
+        ("abcddcba", 8),
+    ] {
+        let analyzed = passwords::analyzer::analyze(password);
+
+        assert_eq!(expected, analyzed.progressive_count(), "{password}");
+    }
+}
+
+#[test]
+fn control_characters() {
+    let password = "a\0b\nc\r\u{7F}\u{80}\u{85}\u{9F}中文";
+
+    let analyzed = passwords::analyzer::analyze(password);
+
+    assert_eq!("abc中文", analyzed.password());
+    assert_eq!(5, analyzed.length());
+    assert_eq!(2, analyzed.other_characters_count());
+}
+
 #[cfg(feature = "common-password")]
 #[test]
 fn analyze_common() {
@@ -30,11 +61,19 @@ fn analyze_common() {
 #[cfg(feature = "common-password")]
 #[test]
 fn is_common_password_1() {
+    assert!(passwords::analyzer::is_common_password("!"));
     assert!(passwords::analyzer::is_common_password("12345678"));
+    assert!(passwords::analyzer::is_common_password("ячсмить"));
 }
 
 #[cfg(feature = "common-password")]
 #[test]
 fn is_common_password_2() {
     assert!(!passwords::analyzer::is_common_password("5jhx>_\"g-T"));
+}
+
+#[cfg(feature = "common-password")]
+#[test]
+fn is_common_password_does_not_cross_entries() {
+    assert!(!passwords::analyzer::is_common_password("!\",\"!!!!!!"));
 }

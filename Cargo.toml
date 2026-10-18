@@ -1,6 +1,6 @@
 [package]
 name = "passwords"
-version = "3.1.18"
+version = "3.1.19"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2024"
 rust-version = "1.85"
@@ -16,15 +16,16 @@ include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE", "data/**/*"]
 rand = "0.10"
 
 md5 = { version = "0.8", optional = true }
-base64 = { version = "0.22", optional = true }
+base64 = { version = "0.23", optional = true }
 bcrypt = { version = "0.19", optional = true }
+subtle = { version = "2.6", optional = true }
 
 [dev-dependencies]
 regex = "1"
 assert-eq-float = "0.1"
 
 [features]
-crypto = ["md5", "bcrypt", "base64"]
+crypto = ["md5", "bcrypt", "base64", "subtle"]
 common-password = []
 
 [package.metadata.docs.rs]

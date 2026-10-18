@@ -3,6 +3,7 @@
 use std::borrow::Cow;
 
 use base64::{Engine, engine::DecodePaddingMode};
+use subtle::ConstantTimeEq;
 
 /// Generate a random 16-byte salt.
 #[inline]
@@ -97,8 +98,12 @@ pub unsafe fn identify_bcrypt<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
     password: &T,
     hashed: &[u8],
 ) -> bool {
+    if hashed.len() < 23 {
+        return false;
+    }
+
     match bcrypt(cost, salt, password) {
-        Ok(hash) => hashed[..23].eq(&hash[..23]),
+        Ok(hash) => bool::from(hashed[..23].ct_eq(&hash[..23])),
         Err(_) => false,
     }
 }
@@ -156,6 +161,9 @@ pub fn bcrypt_format<T: ?Sized + AsRef<[u8]>, K: ?Sized + AsRef<[u8]>>(
 
 /// Identify a password (the null-terminated byte will not be added automatically) by using the bcrypt-hashed data in Modular Crypt Format we've stored before.
 ///
+/// The prefixes `$2$`, `$2a$`, `$2b$`, `$2x$`, and `$2y$` are accepted, and password bytes are used as given for every prefix.
+/// The `$2x$` prefix uses the same algorithm as `$2b$`, so hashes made with the old sign-extension bug may not match.
+///
 /// Use this function carefully because it assumes its input parameters are always correct.
 ///
 /// Typically, the unidentified password should be hashed on the client-side instead of using this function on the server-side.
@@ -164,23 +172,25 @@ pub unsafe fn identify_bcrypt_format<T: ?Sized + AsRef<[u8]>, S: AsRef<str>>(
     password: &T,
     hashed_format: S,
 ) -> bool {
-    let hashed_format = hashed_format.as_ref();
-    let hashed_format_len = hashed_format.len();
+    let hashed_format = hashed_format.as_ref().as_bytes();
 
-    let cost_index = if hashed_format_len == 59 {
-        // $2$
-        3
-    } else if hashed_format_len == 60 {
-        // $2a$, $2b$, ...
-        4
-    } else {
+    let cost_index = match hashed_format {
+        [b'$', b'2', b'$', ..] if hashed_format.len() == 59 => 3,
+        [b'$', b'2', b'a' | b'b' | b'x' | b'y', b'$', ..] if hashed_format.len() == 60 => 4,
+        _ => return false,
+    };
+
+    let cost_bytes = &hashed_format[cost_index..cost_index + 2];
+
+    if !cost_bytes.iter().all(u8::is_ascii_digit) || hashed_format[cost_index + 2] != b'$' {
         return false;
-    };
+    }
 
-    let cost = match hashed_format[cost_index..cost_index + 2].parse::<u8>() {
-        Ok(cost) => cost,
-        Err(_) => return false,
-    };
+    let cost = (cost_bytes[0] - b'0') * 10 + (cost_bytes[1] - b'0');
+
+    if cost >= 32 {
+        return false;
+    }
 
     let base64_bcrypt = base64::engine::general_purpose::GeneralPurpose::new(
         &base64::alphabet::BCRYPT,

@@ -84,11 +84,10 @@ assert!(unsafe { hasher::identify_bcrypt_format("password\0", mcf) });
 
 ## Analyzer
 
-The `analyze` function in the `analyzer` module can be used to create a `AnalyzedPassword` instance which contains some information about the input password.
+The `analyze` function in the `analyzer` module creates an `AnalyzedPassword` instance with information about the input password.
 
-Typically, we don't want our readable password to contain control characters like BS, LF, CR, etc.
-Before the analyzer analyzes a password, it filters the password in order to remove its control characters. And after analyzing, the analyzer will return the filtered password.
-Therefore, you can use this analyzer as a password guard before you store the input password (or generally hash it first and then store) to your database.
+Before analysis, control characters in the ranges `U+0000` through `U+001F` and `U+007F` through `U+009F` are removed.
+Use `AnalyzedPassword::password()` to access the filtered password.
 
 ```rust
 use passwords::analyzer;
@@ -142,14 +141,17 @@ if cfg!(feature = "common-password") {
 
 A password whose score is,
 
-* 0 ~ 20 is very dangerous (may be cracked within few seconds)
+* 0 ~ 20 is very dangerous
 * 20 ~ 40 is dangerous
 * 40 ~ 60 is very weak
 * 60 ~ 80 is weak
 * 80 ~ 90 is good
 * 90 ~ 95 is strong
 * 95 ~ 99 is very strong
-* 99 ~ 100 is invulnerable
+* 99 ~ 100 is the highest score
+
+These scores are heuristic estimates and do not predict cracking time or guarantee security.
+Other characters, including repeated non-ASCII characters, can raise the score to 100.
 
 ## Crates.io
 

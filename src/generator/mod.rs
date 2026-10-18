@@ -85,6 +85,19 @@ impl PasswordGeneratorIter {
         mask
     }
 
+    fn generate_one_with_rng<R: Rng + ?Sized>(&self, rng: &mut R) -> String {
+        let mut password = String::with_capacity(self.length);
+        let mut mask = self.fill_password(rng, &mut password);
+
+        if self.strict {
+            while mask != self.target_mask {
+                mask = self.fill_password(rng, &mut password);
+            }
+        }
+
+        password
+    }
+
     /// Generate random passwords.
     pub fn generate(&self, count: usize) -> Vec<String> {
         debug_assert_ne!(0, self.target_mask);
@@ -93,16 +106,7 @@ impl PasswordGeneratorIter {
         let mut result = Vec::with_capacity(count);
 
         for _ in 0..count {
-            let mut password = String::with_capacity(self.length);
-            let mut mask = self.fill_password(&mut rng, &mut password);
-
-            if self.strict {
-                while mask != self.target_mask {
-                    mask = self.fill_password(&mut rng, &mut password);
-                }
-            }
-
-            result.push(password);
+            result.push(self.generate_one_with_rng(&mut rng));
         }
 
         result
@@ -111,7 +115,11 @@ impl PasswordGeneratorIter {
     /// Generate a random password.
     #[inline]
     pub fn generate_one(&self) -> String {
-        self.generate(1).remove(0)
+        debug_assert_ne!(0, self.target_mask);
+
+        let mut rng = rand::rng();
+
+        self.generate_one_with_rng(&mut rng)
     }
 }
 

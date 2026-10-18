@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-#[cfg(feature = "common-password")]
 #[derive(Debug, Clone, PartialEq)]
 /// The struct of an analysis.
 pub struct AnalyzedPassword {
@@ -15,24 +14,8 @@ pub struct AnalyzedPassword {
     consecutive_count:       usize,
     non_consecutive_count:   usize,
     progressive_count:       usize,
+    #[cfg(feature = "common-password")]
     is_common:               bool,
-}
-
-#[cfg(not(feature = "common-password"))]
-#[derive(Debug, Clone, PartialEq)]
-/// The struct of an analysis.
-pub struct AnalyzedPassword {
-    password:                String,
-    length:                  usize,
-    spaces_count:            usize,
-    numbers_count:           usize,
-    lowercase_letters_count: usize,
-    uppercase_letters_count: usize,
-    symbols_count:           usize,
-    other_characters_count:  usize,
-    consecutive_count:       usize,
-    non_consecutive_count:   usize,
-    progressive_count:       usize,
 }
 
 impl AnalyzedPassword {
@@ -90,72 +73,6 @@ impl AnalyzedPassword {
     }
 }
 
-#[cfg(feature = "common-password")]
-macro_rules! gen_analyzed_password {
-    (
-        $password:ident,
-        $length:ident,
-        $spaces_count:ident,
-        $numbers_count:ident,
-        $lowercase_letters_count:ident,
-        $uppercase_letters_count:ident,
-        $symbols_count:ident,
-        $other_characters_count:ident,
-        $consecutive_count:ident,
-        $non_consecutive_count:ident,
-        $progressive_count:ident,
-        $is_common:ident
-    ) => {{
-        let $is_common = is_common_password(&$password);
-        AnalyzedPassword {
-            $password,
-            $length,
-            $spaces_count,
-            $numbers_count,
-            $lowercase_letters_count,
-            $uppercase_letters_count,
-            $symbols_count,
-            $other_characters_count,
-            $consecutive_count,
-            $non_consecutive_count,
-            $progressive_count,
-            $is_common,
-        }
-    }};
-}
-
-#[cfg(not(feature = "common-password"))]
-macro_rules! gen_analyzed_password {
-    (
-        $password:ident,
-        $length:ident,
-        $spaces_count:ident,
-        $numbers_count:ident,
-        $lowercase_letters_count:ident,
-        $uppercase_letters_count:ident,
-        $symbols_count:ident,
-        $other_characters_count:ident,
-        $consecutive_count:ident,
-        $non_consecutive_count:ident,
-        $progressive_count:ident,
-        $is_common:ident
-    ) => {{
-        AnalyzedPassword {
-            $password,
-            $length,
-            $spaces_count,
-            $numbers_count,
-            $lowercase_letters_count,
-            $uppercase_letters_count,
-            $symbols_count,
-            $other_characters_count,
-            $consecutive_count,
-            $non_consecutive_count,
-            $progressive_count,
-        }
-    }};
-}
-
 #[cfg(not(debug_assertions))]
 #[cfg(feature = "common-password")]
 static COMMON_PASSWORDS: &[&str] =
@@ -170,9 +87,12 @@ static COMMON_PASSWORDS: &str =
 #[cfg(feature = "common-password")]
 /// Whether the input password is common or not. A common password means it is dangerous.
 pub fn is_common_password<S: AsRef<str>>(password: S) -> bool {
-    let target = format!("\"{}\"", password.as_ref());
+    let password = password.as_ref();
 
-    COMMON_PASSWORDS.contains(target.as_str())
+    // The table has no escapes, so we can compare its entries directly.
+    COMMON_PASSWORDS[2..COMMON_PASSWORDS.len() - 2]
+        .split("\",\"")
+        .any(|common_password| common_password == password)
 }
 
 #[cfg(not(debug_assertions))]
@@ -210,11 +130,11 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
     let mut length = 0;
 
     for c in password_chars {
-        let char_code = c as u32;
-
-        if char_code <= 0x1F || char_code == 0x7F {
+        if c.is_control() {
             continue;
         }
+
+        let char_code = c as u32;
 
         password.push(c);
 
@@ -223,14 +143,18 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
         let count = count_map.entry(c).or_insert(0);
         *count += 1;
 
-        if last_char_code == char_code {
+        if length == 1 {
+            last_char_code = char_code;
+        } else if last_char_code == char_code {
             if last_char_code_consecutive {
                 consecutive_count += 1;
             } else {
                 consecutive_count += 2;
                 last_char_code_consecutive = true;
             }
+            last_step = i32::MAX;
             last_step_consecutive = false;
+            last_step_repeat = false;
         } else {
             last_char_code_consecutive = false;
             let step = last_char_code as i32 - char_code as i32;
@@ -283,7 +207,10 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
 
     non_consecutive_count -= consecutive_count;
 
-    gen_analyzed_password!(
+    #[cfg(feature = "common-password")]
+    let is_common = is_common_password(&password);
+
+    AnalyzedPassword {
         password,
         length,
         spaces_count,
@@ -295,6 +222,7 @@ pub fn analyze<S: AsRef<str>>(password: S) -> AnalyzedPassword {
         consecutive_count,
         non_consecutive_count,
         progressive_count,
-        is_common
-    )
+        #[cfg(feature = "common-password")]
+        is_common,
+    }
 }
